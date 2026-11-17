@@ -5,11 +5,15 @@
   // Served only at the custom domain; Cloudflare creates its DNS record and certificate.
   "routes": [{ "pattern": "dot-config.joshka.net", "custom_domain": true }],
   "workers_dev": false,
+  // Give each branch preview a public <preview>-dot-config.<subdomain>.workers.dev URL.
+  "preview_urls": true,
   "assets": {
     "directory": "./dist",
     // Serve dist/404.html with a 404 status for unknown paths.
     "not_found_handling": "404-page"
   },
+  // Workers Builds runs `wrangler preview` for non-production branches; the block can be empty.
+  "previews": {},
   "observability": {
     "enabled": true,
     "traces": { "enabled": true }
