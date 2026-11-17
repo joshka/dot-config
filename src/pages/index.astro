@@ -158,6 +158,32 @@ const after = [
         </li>
       </ol>
 
+      <h3 id="libraries"><a class="heading-link" href="#libraries"><span class="hash" aria-hidden="true">#</span>Libraries that already do this</a></h3>
+      <p>
+        If your tool loads config through one of these, it may only need a
+        setting or an upgrade:
+      </p>
+      <ul>
+        <li>
+          <a href="https://github.com/cosmiconfig/cosmiconfig">cosmiconfig</a> (JavaScript) searches <code>.config/&lt;name&gt;rc</code> and its
+          variants by default.
+        </li>
+        <li>
+          <a href="https://github.com/unjs/c12">c12</a> (JavaScript) supports a <code>.config/</code> folder.
+        </li>
+        <li>
+          <a href="https://github.com/shannonmoeller/find-config">find-config</a> (JavaScript) checks <code>.config/</code> at each directory level.
+        </li>
+        <li>
+          <a href="https://alchemists.io/projects/runcom">Runcom</a> (Ruby)
+          looks in <code>.config/&lt;name&gt;/</code> in the project as well as
+          the XDG user folders.
+        </li>
+      </ul>
+      <p>
+        Know one for another language? <a href={`${repo}/issues/new`}>Open an issue</a>.
+      </p>
+
       <h2 id="tools"><a class="heading-link" href="#tools"><span class="hash" aria-hidden="true">#</span>Tools that support it</a></h2>
       <p>
         These tools find their configuration in <code>.config/</code> without
