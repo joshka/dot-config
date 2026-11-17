@@ -34,3 +34,9 @@ CI runs `pnpm build` (which validates `tools.yaml`), [typos](https://github.com/
 [zizmor](https://docs.zizmor.sh/) and a lockfile check, all gated by one `required` job.
 Actions are locked in `.github/workflows/actions.lock`: after changing a `uses:` line, run
 `gh actions-lock` and commit both files.
+
+## Deploy
+
+The site is a Cloudflare Worker serving the static build (see `wrangler.jsonc`). Workers Builds
+deploys `main` to <https://dot-config.joshka.net> on every push, and builds a preview for every
+other branch, including pull requests.
