@@ -145,8 +145,9 @@ const after = [
       <h2 id="authors"><a class="heading-link" href="#authors"><span class="hash" aria-hidden="true">#</span>For tool authors</a></h2>
       <ol>
         <li>
-          Look for <code>.config/&lt;tool&gt;.&lt;ext&gt;</code>, or
-          <code>.config/&lt;tool&gt;/</code> when the tool has several files.
+          Look for <code>.config/&lt;tool&gt;.&lt;ext&gt;</code>, without a
+          leading dot, or <code>.config/&lt;tool&gt;/</code> when the tool has
+          several files. See <a href="#naming">how to name the file</a>.
         </li>
         <li>
           Keep supporting existing locations and explicit paths. Document which
@@ -255,6 +256,17 @@ const after = [
         The <a href="https://specifications.freedesktop.org/basedir/latest/">XDG Base Directory specification</a> covers per-user settings in <code>~/.config/</code>.
         A project's <code>.config/</code> lives in the repository and is shared
         by everyone working on it. Tools keep their existing file formats.
+      </p>
+      <h3 id="naming"><a class="heading-link" href="#naming"><span class="hash" aria-hidden="true">#</span>Should the file keep its leading dot?</a></h3>
+      <p>
+        No. Inside <code>.config/</code> the folder already does the hiding, so
+        <code>.bacon.toml</code> becomes <code>.config/bacon.toml</code>. A
+        file called <code>.config/.bacon.toml</code> is hidden twice and easy
+        to miss with <code>ls</code>. If a tool needs more than one file, give
+        it a folder: <code>.config/rubocop/config.yml</code> follows the same
+        layout as <code>~/.config/</code>. A few tools, RuboCop and release-it
+        among them, also accept the dotted name, which is fine to keep for
+        compatibility, but it shouldn't be the documented default.
       </p>
       <h3 id="what-moves"><a class="heading-link" href="#what-moves"><span class="hash" aria-hidden="true">#</span>Should everything move?</a></h3>
       <p>
