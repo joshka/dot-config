@@ -1,0 +1,143 @@
+- name: ".NET local tools"
+  description: "Repository-local tools"
+  paths: [".config/dotnet-tools.json"]
+  reference: "https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools"
+  note: "Only the local tool manifest, not other .NET configuration."
+
+- name: "Air"
+  description: "Live reloading"
+  paths: [".config/air.toml"]
+  reference: "https://github.com/air-verse/air/blob/master/runner/config.go"
+
+- name: "ansible-lint"
+  description: "Ansible linting"
+  paths: [".config/ansible-lint.yml", ".config/ansible-lint.yaml"]
+  reference: "https://docs.ansible.com/projects/lint/configuring/"
+
+- name: "Bacon"
+  description: "Background checks and tests"
+  paths: [".config/bacon.toml"]
+  reference: "https://dystroy.org/bacon/config/"
+
+- name: "cargo-deny"
+  description: "Dependency policy checks"
+  paths: [".config/deny.toml"]
+  reference: "https://github.com/EmbarkStudios/cargo-deny/blob/main/src/cargo-deny/common.rs"
+
+- name: "cargo-nextest"
+  description: "Test runner"
+  paths: [".config/nextest.toml"]
+  reference: "https://nexte.st/docs/configuration/"
+
+- name: "changelogen"
+  description: "Changelog generation and releases"
+  paths: [".config/changelog.ts", ".config/changelog.config.ts"]
+  reference: "https://github.com/unjs/changelogen/blob/v0.6.2/src/config.ts"
+  note: "Loaded through c12."
+
+- name: "CSpell"
+  description: "Code and documentation spelling"
+  paths: [".config/cspell.json", ".config/cspell.config.yaml"]
+  reference: "https://cspell.org/docs/getting-started"
+
+- name: "doc8"
+  description: "reStructuredText checks"
+  paths: [".config/doc8.ini"]
+  reference: "https://github.com/PyCQA/doc8#usage"
+
+- name: "git-cliff"
+  description: "Changelog generation"
+  paths: [".config/cliff.toml"]
+  reference: "https://git-cliff.org/docs/configuration/"
+
+- name: "GoReleaser"
+  description: "Release automation"
+  paths: [".config/goreleaser.yml", ".config/goreleaser.yaml"]
+  reference: "https://goreleaser.com/customization/"
+
+- name: "Insta / cargo-insta"
+  description: "Snapshot testing"
+  paths: [".config/insta.yaml"]
+  reference: "https://github.com/mitsuhiko/insta/blob/master/insta/src/env.rs"
+
+- name: "Lefthook"
+  description: "Git hook management"
+  paths: [".config/lefthook.yml"]
+  reference: "https://lefthook.dev/configuration/"
+  note: "Also accepts YAML, TOML, JSON and JSONC variants."
+
+- name: "Mill"
+  description: "JVM build tooling"
+  paths:
+    - ".config/mill-version"
+    - ".config/mill-opts"
+    - ".config/mill-jvm-version"
+    - ".config/mill-jvm-opts"
+  reference: "https://mill-build.org/mill/cli/build-header.html"
+  note: "Launcher and JVM settings; not the build definition."
+
+- name: "mise"
+  description: "Development tools, environments and tasks"
+  paths: [".config/mise.toml", ".config/mise/config.toml"]
+  reference: "https://mise.jdx.dev/configuration.html"
+
+- name: "Molecule"
+  description: "Ansible testing"
+  paths: [".config/molecule/config.yml"]
+  reference: "https://docs.ansible.com/projects/molecule/configuration/#prerun"
+  note: "Shared settings that add to each scenario’s configuration."
+
+- name: "Nitro"
+  description: "Server application toolkit"
+  paths: [".config/nitro.ts", ".config/nitro.config.ts"]
+  reference: "https://nitro.build/docs/configuration"
+
+- name: "Nuxt"
+  description: "Vue application framework"
+  paths: [".config/nuxt.ts", ".config/nuxt.config.ts"]
+  reference: "https://github.com/nuxt/nuxt/blob/main/packages/kit/src/loader/config.ts"
+  note: "Loaded through c12."
+
+- name: "Prisma"
+  description: "Database tooling and ORM"
+  paths: [".config/prisma.ts"]
+  reference: "https://docs.prisma.io/docs/orm/reference/prisma-config-reference"
+
+- name: "release-it"
+  description: "Versioning and release automation"
+  paths: [".config/.release-it.json", ".config/.release-it.yaml"]
+  reference: "https://github.com/release-it/release-it/blob/21.1.0/lib/config.js"
+  note: "Keeps the leading dot (`.release-it.json`). Loaded through c12."
+
+- name: "RuboCop"
+  description: "Ruby linting and formatting"
+  paths: [".config/.rubocop.yml", ".config/rubocop/config.yml"]
+  reference: "https://docs.rubocop.org/rubocop/latest/configuration.html"
+
+- name: "rumdl"
+  description: "Markdown linting and formatting"
+  paths: [".config/rumdl.toml"]
+  reference: "https://github.com/rvben/rumdl/blob/main/docs/configuration/index.md"
+
+- name: "semantic-release"
+  description: "Automated versioning and publishing"
+  paths: [".config/releaserc.json", ".config/releaserc.yaml"]
+  reference: "https://github.com/semantic-release/semantic-release/blob/v25.0.9/lib/get-config.js"
+  note: "Loaded through cosmiconfig."
+
+- name: "Stylelint"
+  description: "CSS linting"
+  paths: [".config/stylelintrc.json", ".config/stylelintrc.yaml"]
+  reference: "https://github.com/stylelint/stylelint/blob/main/lib/createStylelint.mjs"
+  note: "Loaded through cosmiconfig."
+
+- name: "SVGR"
+  description: "Convert SVGs to React components"
+  paths: [".config/svgrrc.json", ".config/svgrrc.yaml"]
+  reference: "https://github.com/gregberge/svgr/blob/v8.1.0/packages/core/src/config.ts"
+  note: "Loaded through cosmiconfig."
+
+- name: "Tombi"
+  description: "TOML formatting and linting"
+  paths: [".config/tombi.toml"]
+  reference: "https://tombi-toml.github.io/tombi/docs/configuration/"

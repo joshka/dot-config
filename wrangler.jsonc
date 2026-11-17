@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dot-config",
+  "compatibility_date": "2026-11-17",
+  // Served only at the custom domain; Cloudflare creates its DNS record and certificate.
+  "routes": [{ "pattern": "dot-config.joshka.net", "custom_domain": true }],
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html with a 404 status for unknown paths.
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  }
+}

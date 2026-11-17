@@ -1,0 +1,292 @@
+---
+import { getCollection } from "astro:content";
+import Tree from "../components/Tree.astro";
+import "../styles.css";
+
+const tools = (await getCollection("tools"))
+  .map((t) => t.data)
+  .sort((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
+if (tools.length === 0) throw new Error("No tools loaded from src/data/tools.yaml");
+const repo = "https://github.com/joshka/dot-config";
+const request = `Would you consider also looking for this tool's configuration in \`.config/\`?
+
+Many projects end up with a pile of tool config files in their root. Tools such as mise, RuboCop, Prisma, Stylelint and cargo-nextest also look in \`.config/\`, so projects can group these files without passing a path to every command. Existing locations would keep working.
+
+See https://dot-config.joshka.net for details and the list of supporting tools.`;
+// GitHub's file list order: folders first, then files, alphabetical ignoring case.
+const sortLikeGitHub = (names: string[]) =>
+  [...names].sort(
+    (a, b) =>
+      Number(b.endsWith("/")) - Number(a.endsWith("/")) ||
+      a.localeCompare(b, "en", { sensitivity: "base" }),
+  );
+const clutter = [
+  ".github/", "docs/", "src/", "tests/",
+  ".editorconfig", ".eslintrc.json", ".gitattributes", ".gitignore",
+  ".lefthook.yml", ".markdownlint.json", ".mise.toml", ".nvmrc",
+  ".prettierignore", ".prettierrc", ".release-it.json", ".stylelintrc.json",
+  "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE", "README.md",
+  "commitlint.config.js", "cspell.json", "package.json", "pnpm-lock.yaml",
+  "prisma.config.ts", "tsconfig.json", "vitest.config.ts",
+];
+const common = [
+  { name: "src/", dir: true },
+  { name: "pyproject.toml" },
+  { name: "README.md" },
+];
+const before = [
+  { name: "project/", dir: true, children: [
+    { name: ".ansible-lint", state: "moved" as const },
+    { name: ".mill-version", state: "moved" as const },
+    { name: ".rubocop.yml", state: "moved" as const },
+    { name: "doc8.ini", state: "moved" as const },
+    ...common,
+  ] },
+];
+const after = [
+  { name: "project/", dir: true, children: [
+    { name: ".config/", dir: true, state: "new" as const, children: [
+      { name: "ansible-lint.yml" },
+      { name: "doc8.ini" },
+      { name: "mill-version" },
+      { name: ".rubocop.yml" },
+    ] },
+    ...common,
+  ] },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="A convention for keeping project tool configuration in .config/ instead of the project root."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={Astro.site} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.site} />
+    <meta property="og:title" content="Keep tool config in .config/" />
+    <meta property="og:description" content="A convention for project tools: look for configuration in .config/ as well as the project root." />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Before and after: config files move from the project root into .config/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t) document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <title>.config: project tool configuration</title>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">
+        <svg class="brand-icon" viewBox="0 0 34 32" width="38" height="36" aria-hidden="true">
+          <path class="fill" d="M3 9V6a2 2 0 0 1 2-2h9l3.5 4H29a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+          <path d="M3 11h28" />
+          <circle cx="12" cy="20" r="3.2" />
+        </svg>
+        .config/
+      </a>
+      <nav>
+        <a href="#authors">Tool authors</a>
+        <a href="#tools">Tools</a>
+        <a href="#faq">FAQ</a>
+        <a href={repo}>GitHub</a>
+        <button id="theme" type="button" aria-label="Toggle dark mode">◐</button>
+      </nav>
+    </header>
+    <main>
+      <h1>Keep tool config in <code>.config/</code></h1>
+      <p class="lede">
+        A convention for project tools: look for configuration in
+        <code>.config/</code> as well as the project root.
+      </p>
+
+      <h2 id="why"><a class="heading-link" href="#why"><span class="hash" aria-hidden="true">#</span>Why</a></h2>
+      <p>
+        On GitHub, the README comes after the file list. In a project with a
+        lot of tooling, that list can look like this:
+      </p>
+      <ul class="root-listing" aria-label="Example repository root">
+        {sortLikeGitHub(clutter).map((name) => <li>{name}</li>)}
+      </ul>
+      <p>
+        That's 27 entries before the README, and <code>src/</code> and
+        <code>docs/</code> are two of them.
+        The Node.js tooling group <a href="https://github.com/nodejs/tooling/issues/79">raised the same complaint</a> in 2020.
+      </p>
+      <p>
+        If tools also look in <code>.config/</code>, projects can gather those
+        files in one place, much as <code>.github/</code> already holds GitHub's
+        files, without passing a custom path to every command, editor and CI
+        job.
+      </p>
+
+      <div class="trees">
+        <figure>
+          <figcaption>Before</figcaption>
+          <div class="tree"><Tree entries={before} /></div>
+        </figure>
+        <figure>
+          <figcaption>After</figcaption>
+          <div class="tree"><Tree entries={after} /></div>
+        </figure>
+      </div>
+
+
+      <h2 id="authors"><a class="heading-link" href="#authors"><span class="hash" aria-hidden="true">#</span>For tool authors</a></h2>
+      <ol>
+        <li>
+          Look for <code>.config/&lt;tool&gt;.&lt;ext&gt;</code>, or
+          <code>.config/&lt;tool&gt;/</code> when the tool has several files.
+        </li>
+        <li>
+          Keep supporting existing locations and explicit paths. Document which
+          file wins when more than one exists.
+        </li>
+        <li>
+          Document how the project root is found and how relative paths inside
+          the config are resolved.
+        </li>
+      </ol>
+
+      <h2 id="tools"><a class="heading-link" href="#tools"><span class="hash" aria-hidden="true">#</span>Tools that support it</a></h2>
+      <p>
+        These tools find their configuration in <code>.config/</code> without
+        being given a path. Some accept more filenames than shown here; see
+        each link for details.
+      </p>
+      <ul class="tools">
+        {
+          tools.map((t) => (
+            <li>
+              <a href={t.reference}>{t.name}</a>
+              <span class="desc">{t.description}</span>
+              <div class="paths">{t.paths.map((p) => <code>{p}</code>)}</div>
+              {t.note && (
+                <small>
+                  {t.note.split("`").map((part, i) => (i % 2 ? <code>{part}</code> : part))}
+                </small>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <h3 id="request"><a class="heading-link" href="#request"><span class="hash" aria-hidden="true">#</span>Don't see a tool you use?</a></h3>
+      <p>
+        If it already supports <code>.config/</code>, <a href={`${repo}/blob/main/src/data/tools.yaml`}>add it to the list</a>.
+        If it doesn't, you can ask its maintainers.
+      </p>
+      <div class="callout">
+        <p class="callout-title">Search before you ask</p>
+        <ul>
+          <li>Check the tool's docs: it may already support <code>.config/</code>.</li>
+          <li>
+            Search its issues and PRs, <strong>open and closed</strong>, for
+            <code>.config</code> and <code>XDG</code>.
+          </li>
+          <li>If there's already an issue, read it, add a 👍 if you agree, and don't open another.</li>
+        </ul>
+        <label class="confirm">
+          <input type="checkbox" id="searched" />
+          I searched and there's no existing issue
+        </label>
+        <div class="copy">
+          <p>Then you can start from this text, and edit it to fit the tool:</p>
+          <div class="copy-box">
+            <pre><code id="request-text">{request}</code></pre>
+            <button type="button" data-copy="request-text">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="faq"><a class="heading-link" href="#faq"><span class="hash" aria-hidden="true">#</span>Questions</a></h2>
+      <p>
+        These came up when the problem was discussed on Hacker News in <a href="https://news.ycombinator.com/item?id=24066748">2020</a> and <a href="https://news.ycombinator.com/item?id=36472613">2023</a>.
+      </p>
+      <h3 id="moving-the-mess"><a class="heading-link" href="#moving-the-mess"><span class="hash" aria-hidden="true">#</span>Isn't this just moving the mess?</a></h3>
+      <p>
+        Yes. The files are all still there, one click away, and the root
+        listing gets shorter. GitHub already does this with
+        <code>.github/</code>.
+      </p>
+      <h3 id="ui-problem"><a class="heading-link" href="#ui-problem"><span class="hash" aria-hidden="true">#</span>Isn't this for GitHub or my editor to fix?</a></h3>
+      <p>
+        A setting in one viewer only changes that viewer. A folder is part of
+        the repository, so anyone who clones it or opens it on another host
+        sees the same layout.
+      </p>
+      <h3 id="fewer-tools"><a class="heading-link" href="#fewer-tools"><span class="hash" aria-hidden="true">#</span>Why not just use fewer tools?</a></h3>
+      <p>
+        That helps, but even a project with a few tools ends up with a few
+        config files, and each one goes in the root.
+      </p>
+      <h3 id="why-the-dot"><a class="heading-link" href="#why-the-dot"><span class="hash" aria-hidden="true">#</span>Why hide it behind a dot?</a></h3>
+      <p>
+        On Linux and macOS, <code>ls</code> and Finder hide dot-folders by
+        default, which keeps tool settings out of everyday listings. They
+        aren't secret, though. <code>ls -a</code>, your editor and GitHub all show the
+        folder, and it's committed like any other file. The dot also keeps it
+        apart from <code>config/</code>, which plenty of applications use for
+        their own settings.
+      </p>
+      <h3 id="why-not-manifests"><a class="heading-link" href="#why-not-manifests"><span class="hash" aria-hidden="true">#</span>Why not put it all in <code>package.json</code> or <code>pyproject.toml</code>?</a></h3>
+      <p>
+        Where a tool supports that, use it. Many tools don't, and plenty of
+        projects have more than one manifest or none at all.
+      </p>
+      <h3 id="guessing"><a class="heading-link" href="#guessing"><span class="hash" aria-hidden="true">#</span>Won't people have to guess where the config is?</a></h3>
+      <p>
+        Tools keep reading their existing locations and document which file
+        wins, and a project only moves a file once its tool supports the new
+        location. If the file has relative paths in it, check those when you
+        move it.
+      </p>
+      <h3 id="xdg"><a class="heading-link" href="#xdg"><span class="hash" aria-hidden="true">#</span>Isn't this XDG, or another competing standard?</a></h3>
+      <p>
+        The <a href="https://specifications.freedesktop.org/basedir/latest/">XDG Base Directory specification</a> covers per-user settings in <code>~/.config/</code>.
+        A project's <code>.config/</code> lives in the repository and is shared
+        by everyone working on it. Tools keep their existing file formats.
+      </p>
+      <h3 id="what-moves"><a class="heading-link" href="#what-moves"><span class="hash" aria-hidden="true">#</span>Should everything move?</a></h3>
+      <p>
+        No. Keep manifests, lockfiles, <code>.gitignore</code> and
+        <code>.editorconfig</code> where the tools that read them look for
+        them.
+      </p>
+    </main>
+    <footer>
+      <a href={repo}>Source</a> · <a href={`${repo}/issues`}>Discussion</a> · Continued from <a href="https://github.com/dot-config/dot-config.github.io">dot-config/dot-config.github.io</a>
+    </footer>
+    <script is:inline>
+      for (const button of document.querySelectorAll("[data-copy]")) {
+        button.addEventListener("click", async () => {
+          const text = document.getElementById(button.dataset.copy).textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = "Copied";
+          } catch {
+            button.textContent = "Copy failed";
+          }
+          setTimeout(() => (button.textContent = "Copy"), 1500);
+        });
+      }
+      document.getElementById("theme").addEventListener("click", () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+        root.dataset.theme = dark ? "light" : "dark";
+        try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+      });
+    </script>
+  </body>
+</html>

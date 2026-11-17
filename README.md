@@ -1,30 +1,36 @@
-# Use .config to store your project configs
+# .config
 
-[![Gitter](https://badges.gitter.im/dot-config/community.svg)](https://gitter.im/dot-config/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+A convention for project tools: look for configuration in `.config/` as well as
+the project root. See <https://dot-config.joshka.net>.
 
-The goal of dot-config is to promote standardization of `.config` folder
-for storing project specific tool configurations.
+This project continues
+[dot-config/dot-config.github.io](https://github.com/dot-config/dot-config.github.io),
+which is no longer maintained. Its history is kept here.
 
-By using a subfolder you will help **decluttering project root folder**
-and **isolating configuration** from other project files.
+## Add a tool
 
-Use of `.config` is based on long standing [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
-standard which promoted the use of `~/.config` for keeping **user settings**.
-We only extended the concept to project repositories.
+Add an entry to [`src/data/tools.yaml`](src/data/tools.yaml):
 
-![social-preview](https://repository-images.githubusercontent.com/449231631/31bc5be9-e2e4-409b-9b0e-f7bce50dfd7a)
+```yaml
+- name: "Example"
+  description: "What the tool does"
+  paths: [".config/example.toml"]
+  reference: "https://example.com/docs/configuration"
+  note: "Optional qualification, such as a minimum version."
+```
 
-## Tools already supporting .config at repository level
+Link to documentation or source that shows the tool finds `.config/` on its own.
+Accepting an arbitrary path through a flag doesn't count.
 
-- [ansible-lint](https://github.com/ansible/ansible-lint)
-- [ansible-navigator](https://github.com/ansible/ansible-navigator)
-- [doc8](https://github.com/PyCQA/doc8)
-- [Mill](https://github.com/com-lihaoyi/mill)
-- [molecule](https://github.com/ansible-community/molecule)
+## Develop
 
-## Q&A
+```sh
+pnpm install
+pnpm dev      # prints the local URL
+pnpm build    # validates tools.yaml and writes dist/
+```
 
-### Do we really need yet another standard?
-
-Dot-config is **not a new standard**, is just an extension of XDG one, one
-that covers for projects directories in addition to user home directories.
+CI runs `pnpm build` (which validates `tools.yaml`), [typos](https://github.com/crate-ci/typos),
+[zizmor](https://docs.zizmor.sh/) and a lockfile check, all gated by one `required` job.
+Actions are locked in `.github/workflows/actions.lock`: after changing a `uses:` line, run
+`gh actions-lock` and commit both files.

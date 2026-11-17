@@ -1,0 +1,28 @@
+---
+import "../styles.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t) document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <title>Not found · .config</title>
+  </head>
+  <body>
+    <main class="not-found">
+      <h1>Not found</h1>
+      <p>There's nothing at this address. If you were looking for a config file, try <code>.config/</code>.</p>
+      <p><a href="/">Go to the .config/ home page</a></p>
+    </main>
+  </body>
+</html>

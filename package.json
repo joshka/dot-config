@@ -1,0 +1,19 @@
+{
+  "name": "dot-config",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy"
+  },
+  "dependencies": {
+    "astro": "^7.4.12",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.163.0"
+  },
+  "packageManager": "pnpm@12.21.0"
+}
